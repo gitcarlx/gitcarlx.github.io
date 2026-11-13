@@ -4,12 +4,12 @@ const STUDENTE = {
   anagrafica: [
     ["Nome", "CARLO"],
     ["Cognome", "LA COLLA"],
-    ["Data di nascita", ""],
-    ["Provincia di nascita", ""],
-    ["Comune o stato estero di nascita", ""],
+    ["Data di nascita", "30/10/2007"],
+    ["Provincia di nascita", "CATANIA"],
+    ["Comune o stato estero di nascita", "GIARRE"],
     ["Località di nascita", ""],
     ["Genere", "Maschio"],
-    ["Codice fiscale", ""],
+    ["Codice fiscale", "LCLCRL07R30E017W"],
   ],
   carriera: [
     ["Matricola", ""],
