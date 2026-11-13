@@ -1,0 +1,16 @@
+SMART_EDU - progetto Xcode
+
+1. Apri SmartEdu.xcodeproj con Xcode (15 o successivo).
+2. Seleziona il target "SmartEdu" > Signing & Capabilities:
+   - Team: scegli il tuo Apple ID (va bene anche l'account gratuito "Personal Team").
+   - Se Xcode segnala che il Bundle Identifier è già in uso, cambialo
+     (es. it.tuonome.smartedu).
+3. Collega l'iPhone, selezionalo in alto come destinazione e premi Play (Cmd+R).
+4. Sul telefono, la prima volta: Impostazioni > Generali > VPN e gestione dispositivi
+   > autorizza il tuo profilo sviluppatore. Su iOS 16+ attiva anche
+   Impostazioni > Privacy e sicurezza > Modalità sviluppatore.
+
+Con l'account gratuito l'app resta installata 7 giorni, poi va reinstallata da Xcode.
+
+Per modificare i dati (anagrafica, carriera, piano di studi):
+   SmartEdu/www/data.js
