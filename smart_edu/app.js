@@ -14,8 +14,8 @@
   nav.history.innerHTML = `<span>${NAV_ICONS.history}</span>`;
   nav.settings.innerHTML = `<span>${NAV_ICONS.cogs}</span>`;
 
-  const PARENT = { dati: "home", carriera: "home", immatricolazioni: "home", anagrafica: "dati", residenza: "dati", cittadinanza: "dati", contatti: "dati", foto: "dati", piano: "carriera", esami: "carriera", appelli: "carriera" };
-  const LEVEL = { home: 0, dati: 1, carriera: 1, immatricolazioni: 1, anagrafica: 2, residenza: 2, cittadinanza: 2, contatti: 2, foto: 2, piano: 2, esami: 2, appelli: 2 };
+  const PARENT = { dati: "home", carriera: "home", immatricolazioni: "home", anagrafica: "dati", residenza: "dati", cittadinanza: "dati", contatti: "dati", foto: "dati", documento: "dati", iban: "dati", familiari: "dati", alias: "dati", errore: "dati", piano: "carriera", esami: "carriera", appelli: "carriera" };
+  const LEVEL = { home: 0, dati: 1, carriera: 1, immatricolazioni: 1, anagrafica: 2, residenza: 2, cittadinanza: 2, contatti: 2, foto: 2, documento: 2, iban: 2, familiari: 2, alias: 2, errore: 2, piano: 2, esami: 2, appelli: 2 };
   nav.back.onclick = () => {
     const r = route();
     if (r === "home") return;
@@ -222,6 +222,60 @@
       <label class="btn-blue cam">${NAV_ICONS.camera}<input type="file" accept="image/*" id="fin" hidden /></label>
     </div></div>`;
 
+  const roFld = (label, value) =>
+    `<label class="fl${value ? "" : " empty"}"><span>${esc(label)}</span><input readonly value="${esc(value)}" /></label>`;
+  const oggi = () => {
+    const d = new Date();
+    return [d.getDate(), d.getMonth() + 1].map((n) => String(n).padStart(2, "0")).join("/") + "/" + d.getFullYear();
+  };
+
+  const documento = () => {
+    const d = STUDENTE.documento;
+    return `<div class="card"><div class="frm doc">
+      ${roFld("Tipologia documento", d.tipologia)}${roFld("Ente di rilascio", d.ente)}${roFld("Numero del documento", d.numero)}
+      ${roFld("Località del rilascio", d.localita)}${roFld("Data di rilascio", d.rilascio)}${roFld("Data di scadenza", d.scadenza)}
+      <div class="allegati-t">File allegato alla dichiarazione:</div>
+      <ul class="allegati">${d.allegati.map((a) => `<li><a href="#" onclick="return false">${esc(a)}</a></li>`).join("")}</ul>
+      <button class="btn-red">Eliminare</button>
+    </div></div>`;
+  };
+
+  const iban = () => {
+    const d = STUDENTE.iban;
+    return `<div class="card"><div class="frm doc">
+      ${roFld("Anno accademico", d.anno)}${roFld("Data comunicazione all'Ateneo", oggi())}
+      ${fld("Numero IBAN (intestato allo studente)", d.numero)}${fld("Codice Swift/Bic", d.swift)}
+      ${salva}</div></div>`;
+  };
+
+  const familiari = () =>
+    `<div class="card"><div class="grid fam">${[["Scuola specializzazione"], ["Corsi di studio e Dottorati"]]
+      .map(([l]) => `<button class="tile"><div class="box" style="color:#3d7be8">${ICONS.houseUser}</div><div class="label">${esc(l)}</div></button>`)
+      .join("")}</div>
+      <p class="assist">Per assistenza inviare un'email al <a href="#" onclick="return false">settore carriere di competenza</a></p></div>`;
+
+  const alias = () => {
+    const nome = (STUDENTE.anagrafica.find((r) => r[0] === "Nome") || ["", ""])[1];
+    return `<div class="card"><div class="alias-info">
+        <h3>Istruzioni carriere Alias</h3>
+        <ul><li><a href="#" onclick="return false">Istruzioni Carriere Alias | Studenti/esse</a></li></ul>
+        <p>La carriera alias è un profilo burocratico alternativo e temporaneo, riservato agli studenti transgender. Un nome scelto sostituisce il nome scritto nei documenti ufficiali e dato alla nascita in base al sesso biologico</p>
+      </div>
+      <div class="frm alias">
+        <div class="callout">Qui potrai inserire i dati per la richiesta della carriera alias</div>
+        <div class="ind2">${fld("Alias del nome richiesto", nome)}
+        <div class="ta-l">Motivazioni istanza (obbligatorie)</div><textarea></textarea>
+        <label class="filein"><span class="fn">Scegli file</span><span class="br">Browse</span><input type="file" hidden onchange="this.parentNode.querySelector('.fn').textContent=this.files[0]?this.files[0].name:'Scegli file'" /></label></div>
+        <button class="btn-blue wide2">Conferma</button>
+      </div></div>`;
+  };
+
+  const errore = () =>
+    `<div class="card err-card"><div class="alert-err">
+      <div><svg viewBox="0 0 24 24" class="warn"><path d="M12 2.5l10.5 19h-21z" fill="#fff"/><path d="M12 9v6M12 17.6v.4" stroke="#dc3545" stroke-width="2.4" stroke-linecap="round"/></svg><b>Attenzione!</b> Ci sono alcuni errori da correggere</div>
+      <ul><li>Non puoi scaricare il documento perché non hai una carriera attiva oppure la tua foto non è stata validata dall'ateneo oppure una delle tue iscrizioni non è perfezionata</li></ul>
+    </div></div>`;
+
   const ROUTES = {
     home: () => grid(MENUS.home),
     dati: () => grid(MENUS.dati),
@@ -235,6 +289,11 @@
     cittadinanza,
     contatti,
     foto,
+    documento,
+    iban,
+    familiari,
+    alias,
+    errore,
   };
 
   // ---------- router ----------

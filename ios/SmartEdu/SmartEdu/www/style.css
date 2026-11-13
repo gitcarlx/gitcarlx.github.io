@@ -326,3 +326,49 @@ hr.sep { border: 0; border-top: 1px solid #e6e9ec; margin: 34px 0 50px; }
 .fmsg { color: #a3151a; font-size: 13.5px; line-height: 1.75; margin: 0; }
 .btn-blue.cam { width: 80px; height: 40px; margin: 46px 0 0 47px; cursor: pointer; }
 .btn-blue.cam svg { width: 15px; height: 15px; }
+
+/* ---------- documento / iban ---------- */
+.frm.doc { padding: 34px 30px 30px; }
+.frm.doc .fl { margin-bottom: 18px; }
+.frm.doc .fl span { font-size: 12.5px; }
+.frm.doc .fl input { font-size: 16.5px; padding: 6px 0 10px; }
+.frm.doc .fl.empty span { top: 24px; font-size: 16.5px; }
+.frm.doc .fl.empty input { padding-top: 26px; }
+.allegati-t { font-size: 16px; color: #19191a; margin: 34px 0 18px; }
+.allegati { margin: 0 0 30px; padding-left: 36px; min-height: 10px; }
+.allegati li { font-size: 16.5px; line-height: 1.45; }
+.allegati a { color: #0b6bd6; text-decoration: none; }
+.btn-red {
+  display: flex; align-items: center; justify-content: center; width: calc(100% + 30px); margin: 0 -15px;
+  height: 54px; background: #fd3549; color: #fff; text-transform: uppercase; font-weight: 300; font-size: 15px;
+  border-radius: 2px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.28);
+}
+
+/* ---------- familiari ---------- */
+.grid.fam { padding: 48px 15px 50px; column-gap: 30px; }
+.grid.fam .tile .box { aspect-ratio: auto; height: 96px; }
+.assist { margin: 22px 15px 0; padding-bottom: 6px; font-size: 15.5px; line-height: 1.55; color: #19191a; }
+.assist a { color: #0b6bd6; text-decoration: none; }
+
+/* ---------- carriera alias ---------- */
+.alias-info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; border-radius: 4px; padding: 14px 20px 24px; }
+.alias-info h3 { margin: 0 0 4px; font-weight: 400; font-size: 20px; }
+.alias-info ul { margin: 0 0 14px; padding-left: 38px; }
+.alias-info a { color: #0c5460; text-decoration: underline; font-size: 14.5px; }
+.alias-info p { margin: 0; font-size: 14.5px; line-height: 1.6; }
+.frm.alias { padding: 40px 15px 0; }
+.callout { border-left: 5px solid #17818f; box-shadow: 0 1px 4px rgba(0,0,0,.18); border-radius: 3px; padding: 18px 20px; font-size: 16px; line-height: 1.5; color: #19191a; margin-bottom: 18px; }
+.ind2 { padding: 0 15px; }
+.ta-l { font-size: 15.5px; color: #19191a; margin: 54px 0 10px; }
+.ind2 textarea { width: 100%; height: 85px; border: 1px solid #c8c8c8; border-radius: 4px; font: inherit; font-size: 15px; padding: 8px 10px; resize: none; -webkit-user-select: text; user-select: text; }
+.filein { display: flex; border: 1px solid #c8c8c8; border-radius: 4px; height: 38px; margin: 52px 0 24px; font-size: 15.5px; color: #4a4f54; overflow: hidden; }
+.filein .fn { flex: 1; display: flex; align-items: center; padding: 0 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.filein .br { display: flex; align-items: center; padding: 0 12px; background: #e9ecef; border-left: 1px solid #c8c8c8; }
+.btn-blue.wide2 { width: 100%; height: 50px; font-size: 15px; margin-bottom: 30px; }
+
+/* ---------- errore ---------- */
+.card.err-card { min-height: 0; padding-bottom: 64px; }
+.alert-err { background: #dc3545; color: #fff; border-radius: 4px 4px 0 0; padding: 14px 20px 26px; font-size: 15.5px; line-height: 1.55; font-weight: 300; }
+.alert-err b { font-weight: 700; margin: 0 4px 0 8px; }
+.alert-err .warn { width: 17px; height: 17px; vertical-align: -2px; }
+.alert-err ul { margin: 0; padding-left: 38px; }

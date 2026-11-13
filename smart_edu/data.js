@@ -12,7 +12,7 @@ const STUDENTE = {
     ["Codice fiscale", "LCLCRL07R30E017W"],
   ],
   carriera: [
-    ["Matricola", ""],
+    ["Matricola", "1000112437"],
     ["Immatricolazione", "2026/2027"],
     ["Corso di studi", "L-33 R Economia regolamento 2026/2027"],
     ["Ultima iscrizione", "2026/2027"],
@@ -22,7 +22,11 @@ const STUDENTE = {
   // Carriera > Esami e certificati > "Esami non in piano"  [nome, tipo, voto, crediti]
   esamiNonInPiano: [["DEBITO FORMATIVO", "S", "I", ""]],
   // Dati > Residenza
-  residenza: { comune: "", cap: "", dug: "VIA", indirizzo: "", civico: "" },
+  residenza: { comune: "SANTA VENERINA (CT )", cap: "95010", dug: "VIA", indirizzo: "Agostino De Pretis", civico: "38" },
+  // Dati > Documento
+  documento: { tipologia: "", ente: "", numero: "", localita: "", rilascio: "", scadenza: "", allegati: [] },
+  // Dati > Iban (la data di comunicazione è quella di oggi)
+  iban: { anno: "2026/2027", numero: "", swift: "" },
   // Dati > Contatti
   contatti: { email: "", cellulare: "", telefono: "" },
   cittadinanza: "Italia",
@@ -125,10 +129,12 @@ const MENUS = {
     ["La mia foto", "camera", C.blue, "foto"],
     ["Invalidità", "wheelchair", C.blue],
     ["DSA", "universal", C.blue],
-    ["Documento", "idBadge", C.blue],
-    ["Iban", "moneyCheckPen", C.blue],
-    ["Familiari", "houseUser", C.blue],
+    ["Documento", "idBadge", C.blue, "documento"],
+    ["Iban", "moneyCheckPen", C.blue, "iban"],
+    ["Familiari", "houseUser", C.blue, "familiari"],
     ["Contatto aziende", "briefcase", C.blue],
+    ["Carriera Alias", "userTie", C.blue, "alias"],
+    ["Documento identificativo", "idCardDuo", C.blue, "errore"],
   ],
   immatricolazioni: [
     ["Triennali e ciclo unico", "userGraduate", C.purple],
