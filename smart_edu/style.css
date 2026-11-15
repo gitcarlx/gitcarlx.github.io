@@ -1,14 +1,14 @@
 :root {
   --bg: #f2f4f7;
   --card: #ffffff;
-  --tile: #f7f8fa;
-  --tile-border: #dfe3e8;
+  --tile: #f8f9fa;
+  --tile-border: #dee2e6;
   --label: #5c6670;
-  --text: #19191a;
+  --text: #212529;
   --muted: #5d6874;
   --line: #d3dae1;
-  --row-blue: #e3f0fb;
-  --yellow: #fcc00a;
+  --row-blue: #e3f2fd;
+  --yellow: #ffc107;
   --teal: #17a2b8;
   --nav: #1f6fe0;
   --nav-h: 50px;
@@ -54,7 +54,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   background: var(--card);
   margin: 0 8px;
   border-radius: 4px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.125), 0 1px 3px rgba(0, 0, 0, 0.2);
   min-height: 300px;
 }
 
