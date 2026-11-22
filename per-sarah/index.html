@@ -19,15 +19,16 @@
 // tutto in minuscolo, apposta
 const MESSAGGIO = "non erano di stagione, così li ho scritti io";
 const FIRMA     = "— carlo";
-const INTRO     = "> prima, scaccia via i pensieri brutti_";
-const SUGGERIMENTO = "toccali o trascinaci sopra il dito";
-const FINE_GIOCO = "ecco. adesso c'è spazio per qualcosa di bello";
-const PENSIERI = [
-  "ansia", "overthinking", "e se poi...", "non sono abbastanza", "stanchezza",
-  "paura di sbagliare", "giornata storta", "troppi pensieri", "dubbi", "tristezza",
-  "non ce la faccio", "mille cose da fare"
+const INTRO     = "> prima, raccogli queste cose_";
+const SUGGERIMENTO = "toccale per raccoglierle";
+const FINE_GIOCO = "le hai raccolte tutte. e sono tutte vere";
+const FRASI = [
+  "sei bravissima a scattare", "sei perfetta", "sei meravigliosa", "sei fortissima ad editare",
+  "sei di una dolcezza incredibile", "sono fiero di te", "sei unica", "sei il mio posto sicuro",
+  "sei la rosa rossa in un campo di rose bianche", "sei la mia partner in crime", "sei tutto per me",
+  "hai un sorriso meraviglioso", "hai degli occhi incredibili"
 ];
-const DA_SCACCIARE = 8;
+const DA_RACCOGLIERE = FRASI.length;
 /* ======================================================= */
 
 const cv = document.getElementById('c');
@@ -241,53 +242,84 @@ function drawSparks(dt) {
   }
 }
 
-// ---------- minigioco: i pensieri brutti ----------
+// ---------- minigioco: raccogliere le frasi belle ----------
 let phase = 'intro';            // intro -> gioco -> pulito -> fiori
-let thoughts = [], cleared = 0, spawned = 0, phaseT = 0, lastSpawn = 0, pointerDown = false;
+let thoughts = [], flying = [], cleared = 0, spawned = 0, phaseT = 0, lastSpawn = 0, pointerDown = false, barPop = 0;
 const FONTF = () => `${FONT}px "SF Mono", ui-monospace, Menlo, Consolas, monospace`;
-const THF = () => `${Math.round(FONT * 1.45)}px "SF Mono", ui-monospace, Menlo, Consolas, monospace`;
+const THF = () => `${Math.round(FONT * 1.35)}px "SF Mono", ui-monospace, Menlo, Consolas, monospace`;
+const PHRASE_C = ['#ffb3cb', '#ffd9a8', '#c7b3ff', '#a8dcff', '#ffe9a3'];
+
+function splitLines(text) {
+  ctx.font = THF();
+  if (ctx.measureText('♡ ' + text).width < W * 0.78) return ['♡ ' + text];
+  const words = text.split(' '); let best = null;
+  for (let k = 1; k < words.length; k++) {
+    const a = '♡ ' + words.slice(0, k).join(' '), b = '  ' + words.slice(k).join(' ');
+    const m = Math.max(ctx.measureText(a).width, ctx.measureText(b).width);
+    if (!best || m < best.m) best = { m, lines: [a, b] };
+  }
+  return best.lines;
+}
 
 function spawnThought(t) {
-  const text = PENSIERI[spawned % PENSIERI.length]; spawned++;
+  const text = FRASI[spawned]; spawned++;
+  const lines = splitLines(text);
   ctx.font = THF();
-  const w = ctx.measureText('( ' + text + ' )').width;
-  const side = Math.random();
-  const x = side < 0.5 ? 8 : Math.max(8, W - w - 8), y = H * (0.12 + Math.random() * 0.62);
-  thoughts.push({ text, x, y, w, vx: (side < 0.5 ? 1 : -1) * (18 + Math.random() * 22),
-                  vy: (Math.random() - 0.5) * 10, ph: Math.random() * 6.28, born: t, alive: true });
+  const w = Math.max(...lines.map(l => ctx.measureText(l).width));
+  const side = Math.random() < 0.5;
+  const x = side ? 10 : Math.max(10, W - w - 10), y = H * (0.12 + Math.random() * 0.6);
+  thoughts.push({ text, lines, x, y, w, h: lines.length * CH * 1.45, vx: (side ? 1 : -1) * (14 + Math.random() * 18),
+                  vy: (Math.random() - 0.5) * 10, ph: Math.random() * 6.28, born: t, alive: true,
+                  c: PHRASE_C[spawned % PHRASE_C.length] });
 }
 
 function drawThought(th, t, dt) {
   th.x += th.vx * dt; th.y += th.vy * dt + Math.sin(t * 1.2 + th.ph) * 8 * dt;
-  // rimbalzano piano dentro lo schermo invece di andarsene
-  if (th.x < 4 && th.vx < 0) th.vx *= -1;
-  if (th.x + th.w > W - 4 && th.vx > 0 && t - th.born > 2) th.vx *= -1;
-  if (th.y < H * 0.08 || th.y > H * 0.82) th.vy *= -1;
-  ctx.font = THF();
+  if (th.x < 6 && th.vx < 0) th.vx *= -1;
+  if (th.x + th.w > W - 6 && th.vx > 0) th.vx *= -1;
+  if (th.y < H * 0.08 || th.y + th.h > H * 0.84) th.vy *= -1;
   const fade = Math.min(1, (t - th.born) / 0.8);
-  const pulse = 0.55 + 0.25 * Math.sin(t * 2 + th.ph);
-  // nuvoletta grigia di caratteri attorno al pensiero
-  ctx.shadowBlur = 0; ctx.globalAlpha = 0.3 * pulse * fade; ctx.fillStyle = '#6f7891';
-  const cloud = '~'.repeat(Math.ceil(th.w / (CW * 1.45)));
-  ctx.fillText(cloud, th.x, th.y - CH * 0.9); ctx.fillText(cloud, th.x, th.y + CH * 0.9);
-  ctx.globalAlpha = 0.95 * fade; ctx.fillStyle = '#aeb4c6'; ctx.shadowColor = '#000'; ctx.shadowBlur = 6;
-  ctx.fillText('( ' + th.text + ' )', th.x, th.y);
+  const glow = 8 + 6 * Math.sin(t * 2.5 + th.ph);
+  ctx.font = THF(); ctx.fillStyle = th.c; ctx.shadowColor = th.c; ctx.shadowBlur = glow;
+  ctx.globalAlpha = 0.95 * fade;
+  th.lines.forEach((l, k) => ctx.fillText(l, th.x, th.y + k * CH * 1.45));
+  // brillantini attorno
+  ctx.font = FONTF(); ctx.shadowBlur = 6;
+  for (let k = 0; k < 3; k++) {
+    const a = t * 1.5 + th.ph + k * 2.1;
+    ctx.globalAlpha = (0.3 + 0.5 * Math.abs(Math.sin(a * 1.7))) * fade;
+    ctx.fillText(k % 2 ? '·' : '+', th.x + th.w / 2 + Math.cos(a) * (th.w / 2 + 10), th.y + th.h / 2 - CH * 0.6 + Math.sin(a) * (th.h / 2 + 8));
+  }
 }
+
+function barPos() { return { x: W / 2, y: H * 0.9 + CH * 0.5 }; }
 
 function hitThought(px, py) {
   for (const th of thoughts) {
     if (!th.alive) continue;
-    if (px > th.x - 14 && px < th.x + th.w + 14 && py > th.y - CH * 1.4 && py < th.y + CH * 2.4) {
-      th.alive = false; cleared++;
-      // il pensiero si sbriciola in lettere che cadono, poi scintille colorate
-      [...th.text].forEach((ch, k) => sparks.push({ x: (th.x + CW * (k + 2)) / CW, y: th.y / CH, vx: (Math.random() - 0.5) * 6,
-        vy: -2 - Math.random() * 4, life: 1.2, ch, c: '#9aa1b5' }));
+    if (px > th.x - 16 && px < th.x + th.w + 16 && py > th.y - CH * 1.2 && py < th.y + th.h + CH) {
+      th.alive = false;
+      flying.push({ lines: th.lines, x: th.x, y: th.y, w: th.w, c: th.c, t0: performance.now() / 1000 });
       burst(px, py);
-      if (cleared >= DA_SCACCIARE) { phase = 'pulito'; phaseT = performance.now() / 1000; }
       return true;
     }
   }
   return false;
+}
+
+function drawFlying(t) {
+  const b = barPos();
+  flying = flying.filter(f => {
+    const u = (t - f.t0) / 0.9;
+    if (u >= 1) { cleared++; barPop = t; if (cleared >= DA_RACCOGLIERE) { phase = 'pulito'; phaseT = t; } return false; }
+    const e = u * u * (3 - 2 * u), sc = 1 - e * 0.85;
+    const x = f.x + (b.x - f.w / 2 * sc - f.x) * e, y = f.y + (b.y - f.y) * e - Math.sin(u * Math.PI) * 40;
+    ctx.save(); ctx.translate(x, y); ctx.scale(sc, sc);
+    ctx.font = THF(); ctx.fillStyle = f.c; ctx.shadowColor = f.c; ctx.shadowBlur = 14; ctx.globalAlpha = 1 - e * 0.4;
+    f.lines.forEach((l, k) => ctx.fillText(l, 0, k * CH * 1.45));
+    ctx.restore();
+    return true;
+  });
 }
 
 let last = 0;
@@ -308,19 +340,22 @@ function frame(now) {
   }
 
   else if (phase === 'gioco') {
-    // il cielo è coperto: stelle quasi spente
-    drawStars(t, 0.12 + 0.5 * cleared / DA_SCACCIARE);
+    drawStars(t, 0.25 + 0.75 * cleared / DA_RACCOGLIERE);
     const onScreen = thoughts.filter(x => x.alive).length;
-    if (onScreen < 4 && t - lastSpawn > 0.9 && cleared + onScreen < DA_SCACCIARE + 2) { spawnThought(t); lastSpawn = t; }
+    if (onScreen < 3 && spawned < FRASI.length && t - lastSpawn > 1.1) { spawnThought(t); lastSpawn = t; }
     thoughts.forEach(th => th.alive && drawThought(th, t, dt));
+    drawFlying(t);
     drawSparks(dt);
-    // contatore e suggerimento
-    ctx.shadowBlur = 0; ctx.globalAlpha = 0.75; ctx.fillStyle = '#ffb3cb';
-    const bar = '[' + '♥'.repeat(cleared) + '·'.repeat(DA_SCACCIARE - cleared) + ']';
-    ctx.fillText(bar, (W - ctx.measureText(bar).width) / 2, H * 0.9);
+    // barra dei cuori
+    const pop = Math.max(0, 1 - (t - barPop) * 3);
+    ctx.font = `${Math.round(FONT * (1.25 + pop * 0.25))}px "SF Mono", ui-monospace, Menlo, Consolas, monospace`;
+    ctx.shadowColor = '#ff8fb3'; ctx.shadowBlur = 6 + pop * 14; ctx.globalAlpha = 0.9; ctx.fillStyle = '#ff8fb3';
+    const bar = '♥'.repeat(cleared) + '♡'.repeat(DA_RACCOGLIERE - cleared);
+    const bp = barPos();
+    ctx.fillText(bar, bp.x - ctx.measureText(bar).width / 2, H * 0.9);
     if (cleared < 2) {
-      ctx.globalAlpha = 0.5; ctx.fillStyle = '#8e88a3';
-      ctx.fillText(SUGGERIMENTO, (W - ctx.measureText(SUGGERIMENTO).width) / 2, H * 0.9 + CH * 1.8);
+      ctx.font = FONTF(); ctx.shadowBlur = 0; ctx.globalAlpha = 0.5; ctx.fillStyle = '#8e88a3';
+      ctx.fillText(SUGGERIMENTO, (W - ctx.measureText(SUGGERIMENTO).width) / 2, H * 0.9 + CH * 2);
     }
   }
 
@@ -365,7 +400,7 @@ addEventListener('pointerdown', e => {
   if (phase === 'gioco') { if (!hitThought(e.clientX, e.clientY)) burst(e.clientX, e.clientY); return; }
   if (phase === 'fiori') burst(e.clientX, e.clientY);
 });
-addEventListener('pointermove', e => { if (pointerDown && phase === 'gioco') hitThought(e.clientX, e.clientY); });
+
 addEventListener('pointerup', () => { pointerDown = false; });
 addEventListener('pointercancel', () => { pointerDown = false; });
 addEventListener('resize', resize);
