@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0d1424">
-<title>✿</title>
+<title>Fiori per Sarah</title>
 <style>
   :root { --bg: #0d1424; }
   html, body { margin: 0; height: 100%; background: var(--bg); overflow: hidden; }
@@ -36,6 +36,7 @@ const C = {
   blue: ['#6ea8ff', '#9cc4ff', '#4f86f0'],
   white: ['#f4f1ea', '#ffffff', '#dcd8cf'],
   red: ['#ff5a5f', '#ff7b7f', '#e8434a'],
+  azzurro: ['#7cc8ff', '#a8dcff', '#56b3f2'],
   star: ['#ffffff', '#ffe9a3', '#c7b3ff', '#9cc4ff', '#ffb3cb'],
   text: '#ffb3cb'
 };
@@ -192,7 +193,7 @@ function drawRibbon(t) {
   const x0 = ribbon.x - 5, y0 = ribbon.y - 2;
   heart.forEach((row, j) => {
     [...row].forEach((ch, i) => {
-      if (ch !== ' ' && (j / heart.length) < p * 1.2) put(x0 + i, y0 + j, (i + j) % 3 ? '#' : '=', C.red[(i + j) % 3], 1, 12);
+      if (ch !== ' ' && (j / heart.length) < p * 1.2) put(x0 + i, y0 + j, (i + j) % 3 ? '#' : '=', C.azzurro[(i + j) % 3], 1, 12);
     });
   });
   // gambi sotto il fiocco
